@@ -10,8 +10,9 @@ request.interceptors.request.use(function (config) {
   // Do something before request is sent
   // 获取当前登录用户相关信息（token）
   // this.$store
+  // 解构出user
   const { user } = store.state
-
+  // 进行判断 如果登录的时候有user的信息则 此时给他添加上token
   if (user) {
     config.headers.Authorization = `Bearer ${user.token}` // 注册 Bearer 后面的空格
   }
@@ -36,3 +37,4 @@ request.interceptors.response.use(function (response) {
 })
 
 export default request
+//

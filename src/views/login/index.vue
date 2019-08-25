@@ -38,6 +38,7 @@
 // import axios from 'axios';
 // import request from '@/utils/request';
 import { login } from '@/api/user'
+import { mapMutations } from 'vuex'
 // 封装了一个请求模块 并设置了基本路径
 // 通过const request=axios.creat（{}）创建出的一个实例
 export default {
@@ -52,6 +53,7 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['setUser']),
     //   在输入验证码或者是手机号的时候如果出现错误则程序无法继续向下进行 则是通过在按下的登录按钮发送请求时，
     // 通过try{} catch{} 这个方法来对代码进行包裹 如果正常则进入try中进行页面的跳转，如果是失败 则进入catch 将错误捕获斌给与用户提示
     async onLogin () {
@@ -67,9 +69,12 @@ export default {
         // 封装用户相关接口后发送请求
         // eslint-disable-next-line no-unused-vars
         const { data } = await login(this.user)
+
         this.isLoginLoding = false
-        //  手机号及验证码属兔成功之后 则跳转到首页
-        // this.$router.push({ name: 'home' })
+        // 登录成功之后将用户的登录状态（token）存储到本地存储中
+        this.setUser(data.data)
+        //  手机号及验证码输入成功之后 则跳转到首页
+        this.$router.push({ name: 'home' })
       } catch (err) {
         // console.dir(err)
         if (err.response && err.response.status === 400) {
